@@ -1,3 +1,4 @@
+import React from "react";
 import { MAX_COLS, MAX_ROWS, NUM_OF_BOMBS } from "../constants";
 import { Cell, CellValue, CellState } from "../types";
 
@@ -28,7 +29,7 @@ export const generateCells = (): Cell[][] => {
 		const currentCell = cells[randomRow][randomCol];
 
 		// prevents the same cell from being selected twice
-		console.log("compare: ", currentCell.value, CellValue.bomb);
+		// console.log("compare: ", currentCell.value, CellValue.bomb);
 		if (currentCell.value === CellValue.bomb) continue;
 		cells[randomRow][randomCol] = {
 			// state: cells[randomRow][randomCol].state,   // rewritten in line below
@@ -43,6 +44,7 @@ export const generateCells = (): Cell[][] => {
 		for (let colIndex = 0; colIndex < MAX_COLS; colIndex++) {
 			const currentCell = cells[rowIndex][colIndex];
 			if (currentCell.value === CellValue.bomb) continue;
+
 			let numberOfBombs = 0;
 			const topLeftBomb =
 				rowIndex > 0 && colIndex > 0 ? cells[rowIndex - 1][colIndex - 1] : null;
