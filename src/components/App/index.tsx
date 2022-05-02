@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Button from "../Button";
 import NumberDisplay from "../NumberDisplay";
-import { generateCells } from "../../utils";
-import { Cell, CellState, Face } from "../../types";
+import { generateCells, openMultipleCells } from "../../utils";
+import { Cell, CellState, CellValue, Face } from "../../types";
 import "./App.scss";
 
 // React.FC -- TS of React Functional Component
@@ -51,7 +51,28 @@ const App: React.FC = () => {
 		console.log(rowParam, colParam);
 		// Start Game
 		if (!live) {
+			// TODO;  make sure you don't click on bomb with first move
 			setLIve(true);
+		}
+
+		const currentCell = cells[rowParam][colParam];
+		let newCells = cells.slice(); // shallow copy of cells
+
+		// don't do anything if we click on a space that is a flag (or already visible)
+		if (
+			currentCell.state === CellState.flagged ||
+			currentCell.state === CellState.visible
+		)
+			return;
+
+		if (currentCell.value === CellValue.bomb) {
+			// TODO:  take care of bomb click !
+		} else if (currentCell.value === CellValue.none) {
+			newCells = openMultipleCells(newCells, rowParam, colParam);
+			setCells(newCells);
+		} else {
+			newCells[rowParam][colParam].state = CellState.visible;
+			setCells(newCells);
 		}
 	};
 
