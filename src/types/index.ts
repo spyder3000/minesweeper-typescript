@@ -1,15 +1,15 @@
 // enum -- a set of named constants;
 export enum CellValue {
-	none,
-	one,
-	two,
-	three,
-	four,
-	five,
-	six,
-	seven,
-	eight,
-	bomb,
+	none = 0, // with no number specified, this would still default to 0;  e.g. none,
+	one = 1,
+	two = 2,
+	three = 3,
+	four = 4,
+	five = 5,
+	six = 6,
+	seven = 7,
+	eight = 8,
+	bomb = -1,
 }
 export enum CellState {
 	open,

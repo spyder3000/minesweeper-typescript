@@ -30,6 +30,7 @@
 	font-size: 35px;
 	//@include borders(white, #7b7b7b);   // this will be default
 	@include borders;
+	@include buttons;
 	display: flex;
 	justify-content: center;
 	align-items: center;

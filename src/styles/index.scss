@@ -8,5 +8,14 @@
 	border-left-color: $left-top;
 }
 
+@mixin buttons {
+	&:active {
+		border-right-color: white;
+		border-bottom-color: white;
+		border-top-color: #7b7b7b;
+		border-left-color: #7b7b7b;
+	}
+}
+
 @mixin button {
 }
