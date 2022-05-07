@@ -17,5 +17,7 @@
 	}
 }
 
-@mixin button {
+@mixin gridsize($numrows: 9, $numcols: 9) {
+	grid-template-rows: repeat($numrows, 1fr);
+	grid-template-columns: repeat($numcols, 1fr);
 }

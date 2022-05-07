@@ -2,13 +2,21 @@
 
 /* Not set width & height here -- we'll let children elements determine that */
 .App {
-	background: #c2c2c2;
+	background: #bfd7d9; //  #c2c2c2;
 	padding: 16px;
 	@include borders(white, #999);
 }
+.Difficulty {
+	background-color: inherit; // #c0c0c0;
+	padding: 10px 12px;
+	@include borders(#7b7b7b, white);
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
 
 .Header {
-	background-color: #c0c0c0;
+	background-color: inherit; // #c0c0c0;
 	padding: 10px 12px;
 	@include borders(#7b7b7b, white);
 	display: flex;
@@ -20,8 +28,29 @@
 	margin-top: 16px;
 	@include borders(#7b7b7b, white);
 	display: grid;
+}
+
+.grid9 {
 	grid-template-rows: repeat(9, 1fr);
 	grid-template-columns: repeat(9, 1fr);
+}
+.grid16 {
+	grid-template-rows: repeat(16, 1fr);
+	grid-template-columns: repeat(16, 1fr);
+}
+.Difficulty button {
+	padding: 5px 10px;
+	// border: 2px solid #666;
+	@include borders;
+	border-radius: 3px;
+	width: 115px;
+	height: 40px;
+	background-color: #ddd;
+	margin: 0.2rem 0;
+}
+
+.Difficulty button.selected {
+	@include borders(#7b7b7b, white);
 }
 
 .Face {

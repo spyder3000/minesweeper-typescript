@@ -12,9 +12,9 @@ export enum CellValue {
 	bomb = -1,
 }
 export enum CellState {
-	open,
-	visible,
-	flagged,
+	open, // already revealed number
+	visible, // visible for selection
+	flagged, // flagged as a bomb
 }
 
 export type Cell = { value: CellValue; state: CellState; red?: boolean };
@@ -24,4 +24,10 @@ export enum Face {
 	oh = "😮",
 	lost = "😵",
 	won = "😎",
+}
+
+export enum Difficulty {
+	easy,
+	intermediate,
+	expert,
 }

@@ -2,21 +2,36 @@ import React, { useState, useEffect } from "react";
 import Button from "../Button";
 import NumberDisplay from "../NumberDisplay";
 import { generateCells, openMultipleCells } from "../../utils";
-import { Cell, CellState, CellValue, Face } from "../../types";
+import { Cell, CellState, CellValue, Face, Difficulty } from "../../types";
 import "./App.scss";
-import { MAX_ROWS, MAX_COLS } from "../../constants";
+import {
+	MAX_ROWS_EASY,
+	MAX_COLS_EASY,
+	NUM_OF_BOMBS_EASY,
+	MAX_ROWS_INT,
+	MAX_COLS_INT,
+	NUM_OF_BOMBS_INT,
+} from "../../constants";
 
 // React.FC -- TS of React Functional Component
 const App: React.FC = () => {
-	const [cells, setCells] = useState<Cell[][]>(generateCells());
+	const [cells, setCells] = useState<Cell[][]>(generateCells(Difficulty.easy));
 	const [face, setFace] = useState<Face>(Face.smile);
 	const [time, setTime] = useState<number>(0);
 	const [live, setLive] = useState<boolean>(false); // indicates game has begun;
-	const [bombCounter, setBombCounter] = useState<number>(10);
+	const [gameParams, setGameParams] = useState({
+		totRows: MAX_ROWS_EASY,
+		totCols: MAX_COLS_EASY,
+		totBombs: NUM_OF_BOMBS_EASY,
+	});
+	const [bombCounter, setBombCounter] = useState<number>(NUM_OF_BOMBS_EASY);
 	const [hasLost, setHasLost] = useState<boolean>(false);
 	const [hasWon, setHasWon] = useState<boolean>(false);
-	console.log("cells", cells);
+	const [difficulty, setDifficulty] = useState<Difficulty>(Difficulty.easy);
 
+	// console.log("cells", cells);
+
+	// Equivalent to Component Did Mount
 	useEffect(() => {
 		const handleMouseDown = (): void => {
 			setFace(Face.oh);
@@ -62,6 +77,7 @@ const App: React.FC = () => {
 		if (hasWon) {
 			setLive(false);
 			setFace(Face.won);
+			setBombCounter(0);
 		}
 	}, [hasWon]); // will fire when hasWin indicator has changed -- Game Over (win)
 
@@ -73,7 +89,7 @@ const App: React.FC = () => {
 		if (!live) {
 			let isABomb = newCells[rowParam][colParam].value === CellValue.bomb;
 			while (isABomb) {
-				newCells = generateCells();
+				newCells = generateCells(difficulty);
 				if (newCells[rowParam][colParam].value !== CellValue.bomb) {
 					isABomb = false;
 					break;
@@ -97,15 +113,15 @@ const App: React.FC = () => {
 			setCells(newCells);
 			return;
 		} else if (currentCell.value === CellValue.none) {
-			newCells = openMultipleCells(newCells, rowParam, colParam);
+			newCells = openMultipleCells(newCells, rowParam, colParam, difficulty);
 		} else {
 			newCells[rowParam][colParam].state = CellState.visible;
 		}
 
 		// Check to see if user has won (no more available spaces)
 		let safeOpenCellsExists = false;
-		for (let row = 0; row < MAX_ROWS; row++) {
-			for (let col = 0; col < MAX_COLS; col++) {
+		for (let row = 0; row < gameParams.totRows; row++) {
+			for (let col = 0; col < gameParams.totCols; col++) {
 				const currentCell = newCells[row][col];
 				if (
 					currentCell.value !== CellValue.bomb &&
@@ -167,9 +183,46 @@ const App: React.FC = () => {
 		// clear game, start over
 		setLive(false);
 		setTime(0);
-		setCells(generateCells());
+		setCells(generateCells(difficulty));
 		setHasLost(false);
 		setHasWon(false);
+		setBombCounter(gameParams.totBombs);
+	};
+
+	// For clicking on Easy button
+	const handleClickEasy = (): void => {
+		// clear game, start over
+		console.log("click Easy");
+		setLive(false);
+		setTime(0);
+		setCells(generateCells(Difficulty.easy));
+		setHasLost(false);
+		setHasWon(false);
+		setDifficulty(Difficulty.easy);
+		setGameParams({
+			totRows: MAX_ROWS_EASY,
+			totCols: MAX_COLS_EASY,
+			totBombs: NUM_OF_BOMBS_EASY,
+		});
+		setBombCounter(NUM_OF_BOMBS_EASY);
+	};
+
+	// For clicking on Intermediate button
+	const handleClickIntermediate = (): void => {
+		// clear game, start over
+		console.log("click Intermediate");
+		setLive(false);
+		setTime(0);
+		setCells(generateCells(Difficulty.intermediate));
+		setHasLost(false);
+		setHasWon(false);
+		setDifficulty(Difficulty.intermediate);
+		setGameParams({
+			totRows: MAX_ROWS_INT,
+			totCols: MAX_COLS_INT,
+			totBombs: NUM_OF_BOMBS_INT,
+		});
+		setBombCounter(NUM_OF_BOMBS_INT);
 	};
 
 	const renderCells = (): React.ReactNode => {
@@ -207,6 +260,22 @@ const App: React.FC = () => {
 
 	return (
 		<div className="App">
+			<div className="Difficulty">
+				<button
+					className={`easy ${difficulty === Difficulty.easy ? "selected" : ""}`}
+					onClick={handleClickEasy}
+				>
+					Easy
+				</button>
+				<button
+					className={`intermediate ${
+						difficulty === Difficulty.intermediate ? "selected" : ""
+					}`}
+					onClick={handleClickIntermediate}
+				>
+					Intermediate
+				</button>
+			</div>
 			<div className="Header">
 				<NumberDisplay value={bombCounter} />
 				<div className="Face" onClick={handleFaceClick}>
@@ -216,7 +285,13 @@ const App: React.FC = () => {
 				</div>
 				<NumberDisplay value={time} />
 			</div>
-			<div className="Body">{renderCells()}</div>
+			<div
+				className={`Body ${
+					difficulty === Difficulty.intermediate ? "grid16" : "grid9"
+				}`}
+			>
+				{renderCells()}
+			</div>
 		</div>
 	);
 };
